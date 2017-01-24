@@ -63,12 +63,24 @@ def get_project_by_title(title):
 
     db_cursor = db.session.execute(QUERY, {'title': title})
     row = db_cursor.fetchone()
+
     print "Project Title: %s\nDescription: %s" % (row[0], row[1])
 
 
 def get_grade_by_github_title(github, title):
     """Print grade student received for a project."""
-    pass
+
+    QUERY = """
+            SELECT student_github, project_title, grade
+            FROM grades
+            WHERE student_github = :github
+            AND project_title = :title
+            """
+
+    db_cursor = db.session.execute(QUERY, {'github': github, 'title': title})
+    row = db_cursor.fetchone()
+
+    print "Student: %s \nProject: %s \nGrade: %s" % (row[0], row[1], row[2])
 
 
 def assign_grade(github, title, grade):
