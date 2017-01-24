@@ -74,7 +74,7 @@ def get_grade_by_github_title(github, title):
             SELECT student_github, project_title, grade
             FROM grades
             WHERE student_github = :github
-            AND project_title = :title
+                AND project_title = :title
             """
 
     db_cursor = db.session.execute(QUERY, {'github': github, 'title': title})
@@ -85,7 +85,26 @@ def get_grade_by_github_title(github, title):
 
 def assign_grade(github, title, grade):
     """Assign a student a grade on an assignment and print a confirmation."""
-    pass
+
+    # Inserts grade for new project
+    # QUERY = """
+    #         INSERT INTO grades (student_github, project_title, grade)
+    #             VALUES (:github, :title, :grade)
+    #         """
+
+    # Updates grade for existing project
+    QUERY = """
+            UPDATE grades
+            SET grade = :grade
+            WHERE student_github = :github
+                AND project_title = :title
+            """
+
+    db.session.execute(QUERY, {'github': github, 'title': title, 'grade': grade})
+
+    db.session.commit()
+
+    print "Successfully added grade of %s for student %s project %s." % (grade, github, title)
 
 
 def handle_input():
